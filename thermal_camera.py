@@ -11,7 +11,7 @@ THERMAL_USB_PID = "0102"
 
 
 def usb_reset_thermal():
-    """Reset the thermal camera's USB port to force re-enumeration."""
+    """Reset the thermal camera by sysfs unbind/rebind (simulates unplug/replug)."""
     for devpath in glob.glob("/sys/bus/usb/devices/*/idVendor"):
         try:
             vid = open(devpath).read().strip()
@@ -21,6 +21,42 @@ def usb_reset_thermal():
             pid = open(os.path.join(devdir, "idProduct")).read().strip()
             if pid != THERMAL_USB_PID:
                 continue
+            devname = os.path.basename(devdir)
+
+            # Method 1: Deauthorize then reauthorize (simulates physical unplug/replug)
+            auth_path = os.path.join(devdir, "authorized")
+            if os.path.exists(auth_path):
+                print(f"Cycling USB authorization for {devname}...")
+                try:
+                    with open(auth_path, 'w') as f:
+                        f.write('0')
+                    time.sleep(1)
+                    with open(auth_path, 'w') as f:
+                        f.write('1')
+                    time.sleep(3)
+                    return True
+                except PermissionError:
+                    print("  Authorization cycle needs root, trying unbind/rebind...")
+
+            # Method 2: Unbind/rebind through USB driver
+            driver_link = os.path.join(devdir, "driver")
+            if os.path.islink(driver_link):
+                driver_path = os.path.realpath(driver_link)
+                unbind = os.path.join(driver_path, "unbind")
+                bind = os.path.join(driver_path, "bind")
+                print(f"Unbinding/rebinding {devname} via {os.path.basename(driver_path)}...")
+                try:
+                    with open(unbind, 'w') as f:
+                        f.write(devname)
+                    time.sleep(1)
+                    with open(bind, 'w') as f:
+                        f.write(devname)
+                    time.sleep(3)
+                    return True
+                except PermissionError:
+                    print("  Unbind/rebind needs root, trying ioctl reset...")
+
+            # Method 3: Fallback to ioctl USBDEVFS_RESET
             busnum = int(open(os.path.join(devdir, "busnum")).read().strip())
             devnum = int(open(os.path.join(devdir, "devnum")).read().strip())
             usbfs = f"/dev/bus/usb/{busnum:03d}/{devnum:03d}"
