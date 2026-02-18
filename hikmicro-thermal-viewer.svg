@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="thermal" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" style="stop-color:#1a1a2e"/>
+      <stop offset="25%" style="stop-color:#6a0dad"/>
+      <stop offset="50%" style="stop-color:#e63946"/>
+      <stop offset="75%" style="stop-color:#f59e0b"/>
+      <stop offset="100%" style="stop-color:#fef3c7"/>
+    </linearGradient>
+    <linearGradient id="lens" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#3b0764"/>
+      <stop offset="40%" style="stop-color:#dc2626"/>
+      <stop offset="70%" style="stop-color:#f59e0b"/>
+      <stop offset="100%" style="stop-color:#fde68a"/>
+    </linearGradient>
+  </defs>
+  <!-- Camera body -->
+  <rect x="8" y="32" width="112" height="72" rx="12" fill="#1e293b" stroke="#334155" stroke-width="2"/>
+  <!-- Top grip -->
+  <rect x="24" y="24" width="40" height="12" rx="4" fill="#334155"/>
+  <!-- Thermal lens -->
+  <circle cx="64" cy="68" r="28" fill="url(#lens)" stroke="#475569" stroke-width="3"/>
+  <circle cx="64" cy="68" r="20" fill="url(#lens)" opacity="0.8" stroke="#64748b" stroke-width="1"/>
+  <circle cx="64" cy="68" r="12" fill="url(#thermal)"/>
+  <!-- Lens glare -->
+  <ellipse cx="56" cy="60" rx="4" ry="6" fill="white" opacity="0.2"/>
+  <!-- Crosshair -->
+  <line x1="64" y1="56" x2="64" y2="62" stroke="white" stroke-width="1.5" opacity="0.8"/>
+  <line x1="64" y1="74" x2="64" y2="80" stroke="white" stroke-width="1.5" opacity="0.8"/>
+  <line x1="52" y1="68" x2="58" y2="68" stroke="white" stroke-width="1.5" opacity="0.8"/>
+  <line x1="70" y1="68" x2="76" y2="68" stroke="white" stroke-width="1.5" opacity="0.8"/>
+  <!-- IR indicator -->
+  <circle cx="100" cy="40" r="5" fill="#ef4444" opacity="0.9"/>
+  <circle cx="100" cy="40" r="3" fill="#fca5a5"/>
+  <!-- Scale bar on right -->
+  <rect x="104" y="52" width="6" height="32" rx="3" fill="url(#thermal)"/>
+</svg>
